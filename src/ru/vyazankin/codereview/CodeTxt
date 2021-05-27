@@ -1,0 +1,96 @@
+interface Moveable {
+    void move();
+}
+
+interface Stopable {
+    void stop();
+}
+
+abstract class Car {
+
+---Область видимости всех полей нужно сделать protected, в крайнем случае - private
+    public Engine engine;
+    private String color;
+    private String name;
+
+
+---Смысл в методе protected не очевиден, может быть каждая машина обязана добавить свою
+---функциональность и только после этого этот метод должен быть доступен снаружи?
+---Тогда в подклассах надо принудительно расширять видимость и вызывать родительский start()
+---В противном случае можно сделать его публичным.
+    protected void start() {
+        System.out.println("Car starting");
+    }
+
+    abstract void open();
+
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+class LightWeightCar extends Car implements Moveable{
+
+    @Override
+    void open() {
+        System.out.println("Car is open");
+    }
+
+    @Override
+    public void move() {
+        System.out.println("Car is moving");
+    }
+
+---Расширение видимости protected метода предка
+    @Override
+    public void start(){
+        super.start()
+    }
+}
+
+---Интерфейсы нельзя наследовать в данной ситуации. Тут их следует реализовывать.
+---extends Car implements Moveable, Stopable
+class Lorry extends Car, Moveable, Stopable{
+
+    public void move(){
+        System.out.println("Car is moving");
+    }
+
+---Стоит указать @Override для того, чтобы компилятор подсказал нам ошибку, если вдруг
+---что-то изменится в интерфейсе Stopable
+    public void stop(){
+        System.out.println("Car is stop");
+    }
+
+---Расширение видимости protected метода предка
+    @Override
+    public void start(){
+        super.start()
+    }
+
+---Неабстрактный класс обязан реализовывать абстрактные методы предка
+    @Override
+    void open() {
+        System.out.println("Car is open");
+    }
+}
